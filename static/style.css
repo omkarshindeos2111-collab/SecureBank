@@ -536,3 +536,44 @@ body {
     flex-direction: column;
     gap: 30px;
 }
+
+@media (max-width: 768px) {
+
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -250px;
+        width: 250px;
+        height: 100%;
+        z-index: 1000;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 15px;
+        width: 100%;
+    }
+
+    .info-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .balance-card,
+    .info-card,
+    .security-box,
+    .actions-section {
+        width: 100%;
+    }
+}
+
+body{
+    overflow-x: hidden;
+}
