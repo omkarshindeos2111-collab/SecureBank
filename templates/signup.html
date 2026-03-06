@@ -5,22 +5,28 @@
 
 <style>
 
-body{
-background: linear-gradient(135deg,#1e3a8a,#2563eb);
-font-family:Arial;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+*{
+    box-sizing: border-box;
 }
 
-.container{
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;  /*prevents edge sticking on mobile */
+}
 
-background:white;
-padding:40px;
-border-radius:10px;
-width:350px;
-text-align:center;
+.signup-container{
+    background:white;
+    padding:30px;
+    width: 100%;
+    max-width: 420px;
+    border-radius:16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 input{
