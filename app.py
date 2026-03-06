@@ -26,10 +26,11 @@ def add_header(response):
 # ===============================
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.environ.get("DB_HOST"),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD"),
-        database=os.environ.get("DB_NAME")
+        host=os.environ.get("MYSQLHOST"),
+        user=os.environ.get("MYSQLUSER"),
+        password=os.environ.get("MYSQLPASSWORD"),
+        port=int(os.environ.get("MYSQLPORT")),
+        database=os.environ.get("MYSQL_DATABASE")
     )
 
 
