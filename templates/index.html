@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SecureBank Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+
+<div class="topbar">
+    <span class="menu-btn" onclick="toggleSidebar()">☰</span>
+    <span class="topbar-title">SecureBank</span>
+
+    <div class="topbar-right">
+        <div class="profile" onclick="toggleProfileMenu()" id="profileArea">
+
+            <div class="avatar-large">
+                {{ full_name[0]|upper }}
+            </div>
+
+            <div class="profile-dropdown hidden" id="profileDropdown">
+
+                <div class="profile-header">
+
+                    <div class="profile-avatar">
+                        {{ full_name[0]|upper }}
+                    </div>
+
+                    <div class="profile-details">
+                        <div class="full-name">{{ full_name }}</div>
+                        <div class="username">@{{ username }}</div>
+                    </div>
+
+                </div>
+
+            <div class="account-badge">
+                Account ID: {{ account_no }}
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+                <a href="#" onclick="showDashboard()">Dashboard</a>
+                <a href="#" onclick="showSecurity()">Security Settings</a>
+
+            <div class="dropdown-divider"></div>
+
+            <a href="/logout" class="logout-item">Logout</a>
+
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <div class="sidebar" id="sidebar">
+        <h2 class="sidebar-brand">SecureBank</h2>
+
+        <a href="#" id="menuDashboard" onclick="showDashboard()">Dashboard</a>
+        <a href="#" id="menuHistory" onclick="showHistory()">Transaction History</a>
+        <a href="#" id="menuSecurity" onclick="showSecurity()">Security Settings</a>
+
+        <div class="sidebar-bottom">
+            <a href="/logout" class="logout">Logout</a>
+        </div>
+    </div>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <div class="main-content" id="mainContent">
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+
+        <!-- ================= DASHBOARD SECTION ================= -->
+        <div id="dashboardSection">
+
+            <h2 style="margin-bottom:25px;">
+                Welcome, {{ username.capitalize() }}
+            </h2>
+
+            <!-- Balance -->
+            <div class="balance-card">
+                <h3>Available Balance</h3>
+                <h1>₹{{ "{:,.2f}".format(balance) }}</h1>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="info-row">
+
+                <div class="info-card">
+                    <h4>Account ID</h4>
+                    <p>{{ account_no }}</p>
+                </div>
+
+                <div class="info-card">
+                    <h4>Average Debit Spending</h4>
+                    <p>₹{{ "{:,.2f}".format(avg_spending) }}</p>
+                </div>
+
+                <div class="info-card">
+                    <h4>Largest Transaction</h4>
+                    {% if largest_transaction %}
+                        <p>₹{{ "{:,.2f}".format(largest_transaction.amount) }}</p>
+                        <small>{{ largest_transaction.description }}</small>
+                    {% else %}
+                        <p>No transactions yet</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+
+            <!-- Quick Actions -->
+            <div class="actions-section">
+
+                <h3>Quick Actions</h3>
+
+                <!-- Deposit -->
+                <form method="POST" action="/deposit" class="action-form">
+                    <input type="number" name="amount" placeholder="Deposit Amount" required>
+                    <input type="text" name="description" placeholder="Description (optional)">
+                    <button type="submit">Deposit</button>
+                </form>
+
+                <!-- Withdraw -->
+                <form method="POST" action="/withdraw" class="action-form">
+                    <input type="number" name="amount" placeholder="Withdraw Amount" required>
+                    <input type="text" name="description" placeholder="Description (optional)">
+                    <input type="password" name="pin" placeholder="Enter PIN" required>
+                    <button type="submit" class="danger">Withdraw</button>
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= HISTORY SECTION ================= -->
+        <div id="historySection" class="hidden">
+
+            <h2 style="margin-bottom:20px;">Transaction History</h2>
+
+            <div class="history-controls">
+                <div class="filter-bar">
+                    <button onclick="filterTransactions('all')">All</button>
+                    <button onclick="filterTransactions('debit')">Debit Only</button>
+                    <button onclick="filterTransactions('credit')">Credit Only</button>
+                </div>
+            </div>
+
+            {% if transactions %}
+            <table class="transaction-table">
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                </tr>
+
+                {% for t in transactions %}
+                <tr class="transaction-row" data-type="{{ t.type }}">
+                    <td>{{ t.date }}</td>
+                    <td class="{{ t.type }}">
+                        {{ t.type.capitalize() }}
+                    </td>
+                    <td class="{{ t.type }}">
+                        ₹{{ "{:,.2f}".format(t.amount) }}
+                    </td>
+                    <td>{{ t.description }}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+            {% else %}
+                <p>No transactions available.</p>
+            {% endif %}
+
+        </div>
+
+
+        <!-- ================= SECURITY SECTION ================= -->
+        <div id="securitySection" class="hidden">
+
+            <h2 style="margin-bottom:25px;">Security Settings</h2>
+
+            <div class="security-container">
+
+                <!-- Change Password -->
+                <div class="security-card">
+                    <h4 style="margin-bottom:15px;">Change Login Password</h4>
+
+                    <input type="password" id="currentPassword" placeholder="Current Password">
+                    <input type="password" id="newPassword" placeholder="New Password">
+
+                    <button onclick="changePassword()">
+                        Change Password
+                    </button>
+                </div>
+
+                <!-- Change PIN -->
+                <div class="security-card">
+                    <h4 style="margin-bottom:15px;">Change Transaction PIN</h4>
+
+                    <input type="password" id="loginPassword" placeholder="Login Password">
+                    <input type="password" id="newPin" placeholder="New PIN">
+
+                    <button onclick="changePin()">
+                        Change PIN
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

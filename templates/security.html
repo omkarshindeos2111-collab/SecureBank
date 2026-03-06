@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h2>Security Settings</h2>
+
+    <form method="POST" action="/change_password">
+        <input type="password" name="current_password" placeholder="Current Password" required>
+        <input type="password" name="new_password" placeholder="New Password" required>
+        <button type="submit">Change Password</button>
+    </form>
+
+    <br>
+
+    <form method="POST" action="/change_pin">
+        <input type="password" name="password" placeholder="Login Password" required>
+        <input type="password" name="new_pin" placeholder="New PIN" required>
+        <button type="submit">Change PIN</button>
+    </form>
+</div>
+
+{% endblock %}

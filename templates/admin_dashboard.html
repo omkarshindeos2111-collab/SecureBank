@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SecureBank Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <h2>SecureBank Admin Portal</h2>
+
+    <div class="info-row">
+
+        <div class="info-card">
+            <h4>Total Users</h4>
+            <p>{{ total_users }}</p>
+        </div>
+
+        <div class="info-card">
+            <h4>Total Money in System</h4>
+            <p>₹{{ "{:,.2f}".format(total_money) }}</p>
+        </div>
+
+    </div>
+
+    <div class="info-card" style="margin-top:20px;">
+        <h4>Top 5 Accounts by Balance</h4>
+
+        <table class="transaction-table">
+            <tr>
+                <th>Name</th>
+                <th>Account ID</th>
+                <th>Balance</th>
+            </tr>
+
+            {% for acc in top_accounts %}
+            <tr>
+                <td>{{ acc.name }}</td>
+                <td>{{ acc.account_no }}</td>
+                <td>₹{{ "{:,.2f}".format(acc.balance) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

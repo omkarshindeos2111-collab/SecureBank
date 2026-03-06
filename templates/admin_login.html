@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Verification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="security-card" style="margin:100px auto;">
+
+    <h3>Admin Verification Required</h3>
+
+    {% if error %}
+        <div class="alert error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+        <input type="password" name="master_password"
+               placeholder="Enter Admin Master Password" required>
+        <button class="btn-security">Verify</button>
+    </form>
+
+</div>
+
+</body>
+</html>

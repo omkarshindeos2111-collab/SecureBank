@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h2>Transaction History</h2>
+
+    <table class="history-table">
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Description</th>
+        </tr>
+
+        {% for t in transactions %}
+        <tr class="transaction-row" data-type="{{ t.type }}">
+            <td>{{ t.date }}</td>
+            <td class="{{ t.type }}">{{ t.type }}
+                {{ t.type.capitalize() }}
+            </td>
+            <td class="{{ t.type }}">
+                ₹{{ t.amount }}
+            </td>
+            <td>{{ t.description }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
